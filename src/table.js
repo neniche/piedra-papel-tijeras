@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import styled from "@emotion/styled";
 import Token from "./token";
 
@@ -14,6 +14,7 @@ const TableStyled = styled.div`
     grid-column: span 2;
   }
   .line {
+    display: ${({ playing }) => (!playing ? "block" : "none")};
     height: 13px;
     background: rgba(0, 0, 0, 0.2);
     position: absolute;
@@ -46,12 +47,25 @@ const TableStyled = styled.div`
 `;
 
 function Table() {
+  const [playing, setPlaying] = useState(false);
+  const [pick, setPick] = useState("");
+  function onClick(name) {
+    console.log(name);
+    setPlaying(true);
+    setPick(name);
+  }
   return (
-    <TableStyled>
+    <TableStyled playing={playing}>
       <span className="line"></span>
-      <Token name="paper" />
-      <Token name="scissors" />
-      <Token name="rock" />
+      {!playing ? (
+        <>
+          <Token name="paper" onClick={onClick} />
+          <Token name="scissors" onClick={onClick} />
+          <Token name="rock" onClick={onClick} />
+        </>
+      ) : (
+        <Token name={pick} />
+      )}
     </TableStyled>
   );
 }

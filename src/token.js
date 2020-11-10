@@ -42,9 +42,12 @@ const colors = {
   },
 };
 
-function Token({ name }) {
+function Token({ name, onClick }) {
+  function handleClick() {
+    onClick(name);
+  }
   return (
-    <TokenStyled color={colors[name]}>
+    <TokenStyled color={colors[name]} onClick={handleClick}>
       <div className="box">
         <img src={`./images/icon-${name}.svg`} alt="" />
       </div>
