@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import styled from "@emotion/styled";
 import Token from "./token";
+import { WhiteButton } from "./button";
 
 const TableStyled = styled.div`
   display: grid;
@@ -12,6 +13,19 @@ const TableStyled = styled.div`
   position: relative;
   & div:nth-of-type(3) {
     grid-column: span 2;
+  }
+  .in-game {
+    text-align: center;
+    text-transform: uppercase;
+    font-size: 0.8em;
+    font-weight: 700;
+    letter-spacing: 0.1px;
+  }
+  .results {
+    text-align: center;
+    h2 {
+      text-transform: uppercase;
+    }
   }
   .line {
     display: ${({ playing }) => (!playing ? "block" : "none")};
@@ -45,14 +59,72 @@ const TableStyled = styled.div`
     }
   }
 `;
+const elements = ["paper", "scissors", "rock"];
 
 function Table() {
+  // const [score, setScore] = useState(0);
+  const [results, setResults] = useState("");
+  const [housePick, setHousePick] = useState("default");
   const [playing, setPlaying] = useState(false);
   const [pick, setPick] = useState("");
-  function onClick(name) {
-    console.log(name);
+  function getRandomInt(min, max) {
+    return Math.floor(Math.random() * (max - min)) + min;
+  }
+  function launchHousePick() {
+    return new Promise((resolve, reject) => {
+      let pick;
+      const interval = setInterval(() => {
+        pick = elements[getRandomInt(0, 3)];
+        console.log(pick);
+        setHousePick(pick);
+      }, 100);
+      setTimeout(() => {
+        clearInterval(interval);
+        resolve(pick);
+      }, 2000);
+    });
+  }
+  async function onClick(name) {
     setPlaying(true);
     setPick(name);
+    const house = await launchHousePick();
+    console.log("La casa eligio", house);
+    const results = victory(name, house);
+    console.log(results);
+    setResults(results);
+  }
+  function victory(pick, housePick) {
+    if (housePick === pick) {
+      return "draw";
+    }
+    if (pick === "paper") {
+      if (housePick === "scissors") {
+        return "lose";
+      }
+      if (housePick === "rock") {
+        return "win";
+      }
+    }
+    if (pick === "scissors") {
+      if (housePick === "paper") {
+        return "win";
+      }
+      if (housePick === "rock") {
+        return "lose";
+      }
+    }
+    if (pick === "rock") {
+      if (housePick === "paper") {
+        return "lose";
+      }
+      if (housePick === "scissors") {
+        return "win";
+      }
+    }
+  }
+
+  function handlePlayAgainClick() {
+    setPlaying(false);
   }
   return (
     <TableStyled playing={playing}>
@@ -64,7 +136,20 @@ function Table() {
           <Token name="rock" onClick={onClick} />
         </>
       ) : (
-        <Token name={pick} />
+        <>
+          <div className="in-game">
+            <Token name={pick} />
+            <p>You Picked</p>
+          </div>
+          <div className="in-game">
+            <Token name={housePick} />
+            <p>The house Picked</p>
+          </div>
+          <div className="results">
+            <h2>YOU {results}</h2>
+            <WhiteButton onClick={handlePlayAgainClick}>Play again</WhiteButton>
+          </div>
+        </>
       )}
     </TableStyled>
   );
