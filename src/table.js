@@ -1,7 +1,8 @@
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
 import styled from "@emotion/styled";
 import Token from "./token";
 import { WhiteButton } from "./button";
+import { ScoreContext } from "./App";
 
 const TableStyled = styled.div`
   display: grid;
@@ -63,6 +64,7 @@ const elements = ["paper", "scissors", "rock"];
 
 function Table() {
   // const [score, setScore] = useState(0);
+  const { score, setScore } = useContext(ScoreContext);
   const [results, setResults] = useState("");
   const [housePick, setHousePick] = useState("default");
   const [playing, setPlaying] = useState(false);
@@ -92,6 +94,9 @@ function Table() {
     const results = victory(name, house);
     console.log(results);
     setResults(results);
+    if (results === "win") {
+      setScore(score + 1);
+    }
   }
   function victory(pick, housePick) {
     if (housePick === pick) {
