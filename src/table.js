@@ -26,19 +26,22 @@ const TableStyled = styled.div`
     text-align: center;
     h2 {
       text-transform: uppercase;
+      font-size: 56px;
+      margin: 10px;
     }
   }
   .line {
     display: ${({ playing }) => (!playing ? "block" : "none")};
-    height: 13px;
+    height: 14px;
     background: rgba(0, 0, 0, 0.2);
     position: absolute;
-    left: 60px;
-    right: 60px;
-    top: 60px;
+    width: 200px;
+    /* left: 60px;
+    right: 60px; */
+    top: 58px;
     &:before {
       content: "";
-      height: 13px;
+      height: 14px;
       background: rgba(0, 0, 0, 0.5);
       position: absolute;
       left: 0;
@@ -49,7 +52,7 @@ const TableStyled = styled.div`
     }
     &:after {
       content: "";
-      height: 13px;
+      height: 14px;
       background: rgba(0, 0, 0, 0.5);
       position: absolute;
       left: 0;
@@ -57,6 +60,12 @@ const TableStyled = styled.div`
       top: 0;
       transform: rotate(-60deg);
       transform-origin: right top;
+    }
+  }
+  @media screen and (min-width: 1024px) {
+    grid-gap: 30px 1px;
+    .line {
+      width: 400px;
     }
   }
 `;
@@ -130,6 +139,7 @@ function Table() {
 
   function handlePlayAgainClick() {
     setPlaying(false);
+    setResults("");
   }
   return (
     <TableStyled playing={playing}>
@@ -143,16 +153,22 @@ function Table() {
       ) : (
         <>
           <div className="in-game">
-            <Token name={pick} />
+            <Token name={pick} isShadowAnimated={results === "win"} />
             <p>You Picked</p>
           </div>
           <div className="in-game">
-            <Token name={housePick} />
+            <Token name={housePick} isShadowAnimated={results === "lose"} />
             <p>The house Picked</p>
           </div>
           <div className="results">
-            <h2>YOU {results}</h2>
-            <WhiteButton onClick={handlePlayAgainClick}>Play again</WhiteButton>
+            {results && (
+              <>
+                <h2>YOU {results}</h2>
+                <WhiteButton onClick={handlePlayAgainClick}>
+                  Play again
+                </WhiteButton>
+              </>
+            )}
           </div>
         </>
       )}
