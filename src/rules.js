@@ -45,7 +45,7 @@ const RulesStyled = styled.div`
     .button {
       position: fixed;
       right: 5em;
-      bottom: 4em;
+      bottom: 2em;
     }
     .rules-overlay {
       width: 500px;
