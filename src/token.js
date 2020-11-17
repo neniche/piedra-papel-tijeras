@@ -6,13 +6,18 @@ const shadow = keyframes`
 to{
   
   box-shadow: 0 0 0 40px rgba(255,255,255,.04), 0 0 0 80px rgba(255,255,255,.04), 0 0 0 120px rgba(255,255,255,.02);
-  transform: rotateZ(360deg) scale(1.1);
+  transform: scale(1.1);
+}
+`;
+const box = keyframes`
+to{
+  transform: rotateY(360deg);
 }
 `;
 const TokenStyled = styled.div`
   width: 130px;
   height: 125px;
-  border: 15px solid ${({ color }) => color.base};
+  border: 25px solid ${({ color }) => color.base};
   box-sizing: border-box;
   border-radius: 50%;
   display: flex;
@@ -39,11 +44,17 @@ const TokenStyled = styled.div`
     display: flex;
     justify-content: center;
     align-items: center;
+    img {
+      width: 40%;
+      animation: 1s ${({ isShadowAnimated }) => (isShadowAnimated ? box : "")};
+    }
   }
 
-  @media screen and (min-width: 768px) {
-    width: 200px;
-    height: 195px;
+  @media screen and (min-width: 1024px) {
+    ${({ playing }) =>
+      playing
+        ? "width: 300px; height: 295px; border-width: 32px;"
+        : "width: 200px; height: 195px;"}
   }
 `;
 
@@ -66,7 +77,12 @@ const colors = {
   },
 };
 
-function Token({ name = "default", onClick, isShadowAnimated = false }) {
+function Token({
+  name = "default",
+  onClick,
+  isShadowAnimated = false,
+  playing,
+}) {
   function handleClick() {
     if (onClick) {
       onClick(name);
@@ -79,6 +95,7 @@ function Token({ name = "default", onClick, isShadowAnimated = false }) {
       onClick={handleClick}
       name={name}
       isShadowAnimated={isShadowAnimated}
+      playing={playing}
     >
       <div className="box">
         <img src={`./images/icon-${name}.svg`} alt="" />

@@ -63,9 +63,34 @@ const TableStyled = styled.div`
     }
   }
   @media screen and (min-width: 1024px) {
-    grid-gap: 30px 1px;
+    /* grid-gap: 30px 140px; */
+    grid-template-columns: 300px 300px;
+    ${({ playing, results }) =>
+      playing && results && "grid-template-columns: 300px 112px 112px 300px;"};
+    & div:nth-of-type(3) {
+      ${({ playing, results }) =>
+        playing && results && "grid-column: 2 / 4; grid-row: 1;"};
+    }
     .line {
-      width: 400px;
+      width: 300px;
+    }
+    .results {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-direction: column;
+    }
+    .in-game {
+      font-size: 1.2em;
+      display: flex;
+      flex-direction: column;
+      > div {
+        order: 2;
+      }
+      > p {
+        order: 1;
+        margin-bottom: 2em;
+      }
     }
   }
 `;
@@ -142,7 +167,7 @@ function Table() {
     setResults("");
   }
   return (
-    <TableStyled playing={playing}>
+    <TableStyled playing={playing} results={results !== ""}>
       <span className="line"></span>
       {!playing ? (
         <>
@@ -153,11 +178,19 @@ function Table() {
       ) : (
         <>
           <div className="in-game">
-            <Token name={pick} isShadowAnimated={results === "win"} />
+            <Token
+              playing={playing}
+              name={pick}
+              isShadowAnimated={results === "win"}
+            />
             <p>You Picked</p>
           </div>
           <div className="in-game">
-            <Token name={housePick} isShadowAnimated={results === "lose"} />
+            <Token
+              playing={playing}
+              name={housePick}
+              isShadowAnimated={results === "lose"}
+            />
             <p>The house Picked</p>
           </div>
           <div className="results">
